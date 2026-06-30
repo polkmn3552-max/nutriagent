@@ -88,8 +88,10 @@ apiKeyInput.addEventListener("input", () => {
    Upload Interactions
 ============================================================ */
 selectBtn.addEventListener("click", (e) => {
+  e.stopPropagation(); // ⭐ 핵심
   e.preventDefault();
-  fileInput.value = ""; // 중요 (같은 파일 다시 선택 가능)
+
+  fileInput.value = "";
   fileInput.click();
 });
 
@@ -100,6 +102,8 @@ changeImageBtn.addEventListener("click", (e) => {
 });
 
 fileInput.addEventListener("change", (e) => {
+  console.log("🔥 change 이벤트 발생", e.target.files);
+
   const file = e.target.files[0];
   if (file) handleFileSelect(file);
 });
