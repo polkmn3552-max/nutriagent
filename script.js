@@ -88,13 +88,17 @@ apiKeyInput.addEventListener("input", () => {
    Upload Interactions
 ============================================================ */
 selectBtn.addEventListener("click", (e) => {
-  e.stopPropagation(); // ⭐ 핵심
   e.preventDefault();
+  e.stopPropagation();
+
+  console.log("📂 file dialog open");
 
   fileInput.value = "";
-  fileInput.click();
-});
 
+  setTimeout(() => {
+    fileInput.click();
+  }, 0);
+});
 changeImageBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   resetUpload();
