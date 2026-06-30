@@ -1,3 +1,4 @@
+console.log("🔥 JS 로딩됨");
 /* ============================================================
    NutriAgent — script.js
    Vanilla JavaScript only. Uses Google Gemini Vision API
