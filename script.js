@@ -201,7 +201,7 @@ newAnalysisBtn.addEventListener("click", () => {
 ============================================================ */
 async function analyzeFoodImage() {
   if (!selectedBase64) {
-    showError("먼저 음식을 업로드해주세요.");
+    showError("먼저 음식 이미지를 업로드해주세요.");
     return;
   }
 
@@ -214,17 +214,22 @@ async function analyzeFoodImage() {
   startLoadingMessageRotation();
 
   try {
-    await new Promise((r) => setTimeout(r, 1800)); // AI thinking 느낌
+    // AI thinking delay (진짜처럼 보이게)
+    await new Promise((r) => setTimeout(r, 1800));
 
-    const mock = generateMockResult();
+    const result = generateMockResult();
 
     stopLoadingMessageRotation();
     loadingCard.classList.add("hidden");
 
-    renderResults(mock);
+    renderResults(result);
     resultsSection.classList.remove("hidden");
 
-  } catch (e) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+  } catch (err) {
+    stopLoadingMessageRotation();
+    loadingCard.classList.add("hidden");
     showError("분석 중 오류가 발생했습니다.");
   }
 }
@@ -236,62 +241,7 @@ async function analyzeFoodImage() {
 - 추정치라도 반드시 구체적인 숫자를 제시하세요.
 `;
 
-  const requestBody = {
-    contents: [
-      {
-        parts: [
-          { text: prompt },
-          {
-            inline_data: {
-              mime_type: selectedMimeType,
-              data: selectedBase64,
-            },
-          },
-        ],
-      },
-    ],
-    generationConfig: {
-      temperature: 0.4
-    },
-  };
-
-  try {
-    const response = await fetch(GEMINI_API_URL(apiKey), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!response.ok) {
-      const errBody = await response.json().catch(() => ({}));
-      const msg =
-        errBody?.error?.message ||
-        `API 요청이 실패했습니다. (HTTP ${response.status})`;
-      throw new Error(msg);
-    }
-
-    const data = await response.json();
-
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!rawText) {
-      throw new Error("AI 응답을 받아오지 못했습니다. 다시 시도해주세요.");
-    }
-
-    const parsed = parseGeminiJson(rawText);
-    validateResult(parsed);
-    renderResults(parsed);
-
-    loadingCard.classList.add("hidden");
-    resultsSection.classList.remove("hidden");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  } catch (err) {
-    console.error("NutriAgent analysis error:", err);
-    loadingCard.classList.add("hidden");
-    showError(err.message || "분석 중 알 수 없는 오류가 발생했습니다.");
-  } finally {
-    stopLoadingMessageRotation();
-  }
-}
+ 
 
 /* Rotate the loading sub-text every 1.8s for a livelier, premium feel */
 function startLoadingMessageRotation() {
