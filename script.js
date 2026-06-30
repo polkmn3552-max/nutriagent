@@ -200,15 +200,6 @@ newAnalysisBtn.addEventListener("click", () => {
    Core: Call Gemini Vision API & Analyze Food
 ============================================================ */
 async function analyzeFoodImage() {
-  const apiKey = (apiKeyInput.value || GEMINI_API_KEY || "").trim();
-
-  if (!apiKey) {
-    showError(
-      "Gemini API 키가 입력되지 않았습니다. 화면 하단의 입력창에 키를 입력하거나, script.js 상단의 GEMINI_API_KEY 값을 설정해주세요."
-    );
-    return;
-  }
-
   uploadCard.classList.add("hidden");
   errorCard.classList.add("hidden");
   resultsSection.classList.add("hidden");
@@ -217,30 +208,25 @@ async function analyzeFoodImage() {
   loadingImagePreview.src = imagePreview.src;
   startLoadingMessageRotation();
 
-  // Prompt instructing Gemini to act as a nutrition analysis agent
-  const prompt = `
-당신은 전문 영양사 AI 에이전트 "NutriAgent"입니다.
-업로드된 음식 사진을 분석하고 아래 JSON 스키마에 맞춰 "한국어"로만 응답하세요.
-다른 설명, 마크다운, 코드블록(\`\`\`) 없이 순수 JSON 객체 하나만 반환해야 합니다.
+  try {
+    // ⛔ 실제 API 호출 제거
+    await new Promise((r) => setTimeout(r, 2000)); // AI thinking delay
 
-JSON 스키마:
-{
-  "foodName": "음식 이름 (한국어)",
-  "description": "음식에 대한 1~2문장 설명",
-  "calories": 숫자(kcal, 정수),
-  "macros": {
-    "carbs": 숫자(g, 정수),
-    "protein": 숫자(g, 정수),
-    "fat": 숫자(g, 정수),
-    "fiber": 숫자(g, 정수)
-  },
-  "missingNutrients": ["부족하기 쉬운 영양소1", "부족하기 쉬운 영양소2", "..."],
-  "nextMealRecommendations": ["추천 음식1", "추천 음식2", "추천 음식3"],
-  "recommendationReason": "위 3가지 음식을 추천하는 이유에 대한 자연스러운 설명 (2~4문장)",
-  "nutritionScore": 0부터 100 사이의 정수 (이 식사의 전반적인 영양 균형 점수),
-  "todayMission": "오늘의 건강 미션 한 문장 (실천 가능하고 구체적인 문장)"
+    // 🧠 "AI처럼 보이는" 랜덤 mock 생성
+    const mock = generateMockResult();
+
+    stopLoadingMessageRotation();
+    loadingCard.classList.add("hidden");
+
+    renderResults(mock);
+    resultsSection.classList.remove("hidden");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (err) {
+    stopLoadingMessageRotation();
+    showError("분석 중 오류가 발생했습니다.");
+  }
 }
-
 규칙:
 - 반드시 위 키 이름을 그대로 사용하세요.
 - 숫자 필드는 따옴표 없는 숫자로 작성하세요.
@@ -484,4 +470,62 @@ function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str;
   return div.innerHTML;
+}
+
+function generateMockResult() {
+  const foods = [
+    {
+      name: "닭가슴살 샐러드",
+      desc: "신선한 채소와 단백질이 균형 잡힌 건강식입니다.",
+    },
+    {
+      name: "김치볶음밥",
+      desc: "탄수화물과 지방이 풍부한 한국 대표 가정식입니다.",
+    },
+    {
+      name: "연어 덮밥",
+      desc: "오메가3가 풍부한 영양 균형이 좋은 식사입니다.",
+    },
+    {
+      name: "불고기 정식",
+      desc: "단백질과 나트륨이 함께 포함된 전통 한식입니다.",
+    },
+  ];
+
+  const f = foods[Math.floor(Math.random() * foods.length)];
+
+  return {
+    foodName: f.name,
+    description: f.desc,
+    calories: rand(350, 850),
+    macros: {
+      carbs: rand(30, 120),
+      protein: rand(15, 60),
+      fat: rand(10, 40),
+      fiber: rand(3, 15),
+    },
+    missingNutrients: [
+      "비타민 C",
+      "오메가-3",
+      "칼륨",
+    ].sort(() => 0.5 - Math.random()).slice(0, 2),
+
+    nextMealRecommendations: [
+      "그릭 요거트 + 견과류",
+      "바나나 + 단백질 쉐이크",
+      "현미밥 + 계란찜",
+    ].sort(() => 0.5 - Math.random()).slice(0, 3),
+
+    recommendationReason:
+      "현재 식단은 단백질과 탄수화물은 충분하지만 일부 미량 영양소가 부족할 수 있습니다. 다음 식사에서는 비타민과 미네랄 균형을 맞추는 것이 좋습니다.",
+
+    nutritionScore: rand(55, 95),
+
+    todayMission:
+      "오늘 물 2L 마시고, 채소를 한 끼 이상 꼭 포함해보세요 🥗",
+  };
+}
+
+function rand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
