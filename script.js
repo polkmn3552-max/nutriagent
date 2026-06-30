@@ -264,8 +264,7 @@ JSON 스키마:
       },
     ],
     generationConfig: {
-      temperature: 0.4,
-      response_mime_type: "application/json",
+      temperature: 0.4
     },
   };
 
