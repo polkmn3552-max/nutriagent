@@ -87,13 +87,10 @@ apiKeyInput.addEventListener("input", () => {
 /* ============================================================
    Upload Interactions
 ============================================================ */
-selectBtn.addEventListener("click", () => fileInput.click());
-uploadZone.addEventListener("click", (e) => {
-  // Avoid double trigger when clicking the button itself
-  if (e.target === selectBtn) return;
-  if (imagePreviewWrap.classList.contains("hidden")) {
-    fileInput.click();
-  }
+selectBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  fileInput.value = ""; // 중요 (같은 파일 다시 선택 가능)
+  fileInput.click();
 });
 
 changeImageBtn.addEventListener("click", (e) => {
