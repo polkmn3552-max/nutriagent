@@ -19,7 +19,7 @@ const GEMINI_API_KEY = ""; // 예: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 /* 사용할 Gemini 모델 (Vision 지원 모델) */
 const GEMINI_MODEL = "gemini-1.5-flash";
-
+ 
 /* Gemini REST API Endpoint */
 const GEMINI_API_URL = (apiKey) =>
   `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
