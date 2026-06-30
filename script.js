@@ -3,7 +3,7 @@
    Vanilla JavaScript only. Uses Google Gemini Vision API
    to analyze a food image and return structured nutrition data.
 ============================================================ */
-
+ 
 "use strict";
 
 /* ============================================================
