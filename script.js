@@ -200,6 +200,11 @@ newAnalysisBtn.addEventListener("click", () => {
    Core: Call Gemini Vision API & Analyze Food
 ============================================================ */
 async function analyzeFoodImage() {
+  if (!selectedBase64) {
+    showError("먼저 음식을 업로드해주세요.");
+    return;
+  }
+
   uploadCard.classList.add("hidden");
   errorCard.classList.add("hidden");
   resultsSection.classList.add("hidden");
@@ -209,10 +214,8 @@ async function analyzeFoodImage() {
   startLoadingMessageRotation();
 
   try {
-    // ⛔ 실제 API 호출 제거
-    await new Promise((r) => setTimeout(r, 2000)); // AI thinking delay
+    await new Promise((r) => setTimeout(r, 1800)); // AI thinking 느낌
 
-    // 🧠 "AI처럼 보이는" 랜덤 mock 생성
     const mock = generateMockResult();
 
     stopLoadingMessageRotation();
@@ -221,9 +224,7 @@ async function analyzeFoodImage() {
     renderResults(mock);
     resultsSection.classList.remove("hidden");
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  } catch (err) {
-    stopLoadingMessageRotation();
+  } catch (e) {
     showError("분석 중 오류가 발생했습니다.");
   }
 }
