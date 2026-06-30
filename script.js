@@ -22,7 +22,7 @@ const GEMINI_MODEL = "gemini-1.5-flash-latest";
 
 /* Gemini REST API Endpoint */
 const GEMINI_API_URL = (apiKey) =>
-  `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+  `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
 /* ============================================================
    DOM Elements
