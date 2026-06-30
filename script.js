@@ -239,13 +239,7 @@ async function analyzeFoodImage() {
     showError("분석 중 오류가 발생했습니다.");
   }
 }
-규칙:
-- 반드시 위 키 이름을 그대로 사용하세요.
-- 숫자 필드는 따옴표 없는 숫자로 작성하세요.
-- missingNutrients와 nextMealRecommendations는 각각 배열(리스트) 형식이어야 합니다.
-- 모든 텍스트는 한국어로 작성하세요.
-- 추정치라도 반드시 구체적인 숫자를 제시하세요.
-`;
+
 
  
 
